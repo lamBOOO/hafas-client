@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
 import mri from 'mri'
-import {createClient} from '../../index.js'
+import {createRestClient} from '../../rest-exe.js'
 
 const showError = (err) => {
 	console.error(err)
 	process.exit(1)
 }
+
+const token = process.env.TOKEN
+if (!token) showError('Missing TOKEN env var.')
 
 const toString = val => val + ''
 const parseJsObject = val => {
@@ -60,7 +63,7 @@ const args = argv._.slice(2).map((arg, i) => {
 ;(async () => {
 	const {profile} = await import(`../../p/${argv._[0]}/index.js`)
 
-	const client = createClient(profile, 'hafas-client debug CLI')
+	const client = createRestClient(profile, token, 'hafas-client debug CLI')
 
 	const fn = client[fnName]
 
